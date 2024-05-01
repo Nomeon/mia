@@ -8,7 +8,7 @@
         const fileContent = await response.arrayBuffer();
         let rawData = new Uint8Array(fileContent);
         const elements = await handleIFC(rawData);
-        ifcToExcel(elements);
+        // ifcToExcel(elements);
     });
 
 </script>

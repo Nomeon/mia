@@ -40,5 +40,20 @@ export async function getElements(ifcAPI: WebIFC.IfcAPI, model: number){
         })
         elements.push(element);
     }
+
+    console.log(elements)
+
+    const combinedElements: IfcElement[] = Object.values(elements.reduce((acc, element) => {
+        const key = `${element.productcode}-${element.name}-${element.station}`;
+        if (!acc[key]) {
+            acc[key] = { ...element};
+        } else {
+            acc[key].aantal += element.aantal;
+        }
+        return acc;
+    }, {} as { [key: string]: IfcElement }));
+
+    console.log(combinedElements)
+
     return elements;
 }

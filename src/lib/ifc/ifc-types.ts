@@ -2,7 +2,7 @@ export type IfcElement = {
     name: string;
     productcode: string | null;
     station: string | null;
-    aantal: string | null;
+    aantal: string;
     categorie: string | null;
     eenheid: string | null;
     breedte: string | null;
