@@ -14,15 +14,18 @@ export async function getElements(ifcAPI: WebIFC.IfcAPI, model: number){
 
     const propertyMappings: { [key: string]: keyof IfcElement } = {
         "Productcode": "productcode",
+        "Modulenaam": "modulenaam",
         "Station": "station",
         "Aantal": "aantal",
         "Categorie": "categorie",
         "Eenheid": "eenheid",
+        "Materiaal": "materiaal",
         "Breedte": "breedte",
         "Lengte": "lengte",
         "Dikte": "dikte",
         "Gewicht": "gewicht",
-        "Volume": "volume"
+        "Volume": "volume",
+        "Naa.K.T": "code",
     };
 
     for (let i = 0; i < elementIDs.size(); i++) {
@@ -41,8 +44,6 @@ export async function getElements(ifcAPI: WebIFC.IfcAPI, model: number){
         elements.push(element);
     }
 
-    console.log(elements)
-
     const combinedElements: IfcElement[] = Object.values(elements.reduce((acc, element) => {
         const key = `${element.productcode}-${element.name}-${element.station}`;
         if (!acc[key]) {
@@ -53,7 +54,5 @@ export async function getElements(ifcAPI: WebIFC.IfcAPI, model: number){
         return acc;
     }, {} as { [key: string]: IfcElement }));
 
-    console.log(combinedElements)
-
-    return elements;
+    return combinedElements;
 }
