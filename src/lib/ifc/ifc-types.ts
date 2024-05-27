@@ -4,13 +4,9 @@ export type IfcElement = {
     modulenaam: string | null;
     station: string | null;
     aantal: string;
-    categorie: string | null;
     materiaal: string | null;
-    eenheid: string | null;
-    breedte: string | null;
-    lengte: string | null;
-    dikte: string | number | null;
-    gewicht: string | null;
+    gewicht: number | string | null;
+    dikte: number | string | null;
     volume: string | null;
     code: string | null;
 }

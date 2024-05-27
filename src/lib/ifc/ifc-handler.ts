@@ -17,11 +17,7 @@ export async function getElements(ifcAPI: WebIFC.IfcAPI, model: number){
         "Modulenaam": "modulenaam",
         "Station": "station",
         "Aantal": "aantal",
-        "Categorie": "categorie",
-        "Eenheid": "eenheid",
         "Materiaal": "materiaal",
-        "Breedte": "breedte",
-        "Lengte": "lengte",
         "Dikte": "dikte",
         "Gewicht": "gewicht",
         "Volume": "volume",
@@ -45,7 +41,7 @@ export async function getElements(ifcAPI: WebIFC.IfcAPI, model: number){
     }
 
     const combinedElements: IfcElement[] = Object.values(elements.reduce((acc, element) => {
-        const key = `${element.productcode}-${element.name}-${element.station}`;
+        const key = `${element.productcode}-${element.modulenaam}-${element.name}-${element.station}`;
         if (!acc[key]) {
             acc[key] = { ...element};
         } else {

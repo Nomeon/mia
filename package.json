@@ -32,7 +32,6 @@
 	"type": "module",
 	"dependencies": {
 		"exceljs": "^4.4.0",
-		"web-ifc": "^0.0.53",
-		"xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz"
+		"web-ifc": "^0.0.53"
 	}
 }

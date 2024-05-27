@@ -3,8 +3,13 @@
     import { handleIFC } from "$lib/ifc/ifc-handler";
     import { createLVL } from "$lib/lvl/createLVL";
     import { createBP } from "$lib/bp/createBP";
+    import { createISO } from "$lib/iso/createISO";
+    import { createFOL } from "$lib/fol/createFOL";
+    import { createOLI } from "$lib/oli/createOLI";
     import * as Excel from 'exceljs';
 	import type { IfcElement } from "$lib/ifc/ifc-types";
+
+    // TODO: Olivijn kg + m2, Check isolatie, check volume ipv inhoud, aggregatie 
 
     onMount(async () => {
         const response = await fetch('/test.ifc');
@@ -18,9 +23,9 @@
         const workbook = new Excel.Workbook();
         createLVL(workbook, elements);
         createBP(workbook, elements);
-        const sheetISO = workbook.addWorksheet('3. Isolatie');
-        const sheetFOL = workbook.addWorksheet('4. Folie');
-        const sheetOLI = workbook.addWorksheet('5. Olivijn');
+        createISO(workbook, elements);
+        createFOL(workbook, elements);
+        createOLI(workbook, elements);
         createDownload(workbook);
     }
 
