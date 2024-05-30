@@ -1,21 +1,23 @@
 export type IfcElement = {
-    name: string;
-    productcode: string | null;
-    modulenaam: string | null;
-    station: string | null;
-    aantal: string;
-    materiaal: string | null;
-    gewicht: number | string | null;
-    dikte: number | string | null;
-    volume: string | null;
-    code: string | null;
-}
+	name: string;
+	productcode: string;
+	modulenaam: string;
+	station: string;
+	aantal: string;
+	materiaal: string;
+	gewicht: string;
+	dikte: number | string | null;
+	volume: string;
+	code: string;
+	bnr: string | null | undefined;
+	bouwdeel: string | null | undefined;
+};
 
 export type IfcPropertySingleValue = {
-    Name: { value: string };
-    NominalValue: { value: string };
-    Description: null;
-    Unit: null;
-    expressID: number;
-    type: number;
-}
+	Name: { value: string };
+	NominalValue: { value: string };
+	Description: null;
+	Unit: null;
+	expressID: number;
+	type: number;
+};
