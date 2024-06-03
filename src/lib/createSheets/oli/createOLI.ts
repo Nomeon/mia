@@ -5,7 +5,7 @@ import { conditions } from './conditions';
 export function createOLI(wb: Excel.Workbook, elements: IfcElement[]) {
 	// Aggregate elements by station, code, materiaal, dikte and add up the volume
 	const aggregation = elements.reduce((acc, element) => {
-		const key = `${element.station}-${element.code}-${element.materiaal}-${element.dikte}`;
+		const key = `${element.station}-${element.code}-${element.materiaal}-${element.dikte}-${element.bnr}-${element.bouwdeel}`;
 		if (!acc.has(key)) {
 			acc.set(key, { ...element, volume: element.volume, gewicht: element.gewicht }); // Assuming 'volume' exists and is a number
 		} else {

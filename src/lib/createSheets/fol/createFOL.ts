@@ -5,7 +5,7 @@ import { conditions } from './conditions';
 export function createFOL(wb: Excel.Workbook, elements: IfcElement[]) {
 	// Aggregate elements by station, code, materiaal, dikte and add up the volume
 	const aggregation = elements.reduce((acc, element) => {
-		const key = `${element.station}-${element.code}-${element.materiaal}-${element.dikte}`;
+		const key = `${element.station}-${element.code}-${element.materiaal}-${element.dikte}-${element.bnr}-${element.bouwdeel}`;
 		if (!acc.has(key)) {
 			acc.set(key, { ...element, volume: element.volume }); // Assuming 'volume' exists and is a number
 		} else {
@@ -16,6 +16,8 @@ export function createFOL(wb: Excel.Workbook, elements: IfcElement[]) {
 	}, new Map());
 
 	const FOLelements = Array.from(aggregation.values());
+
+	// const FOLelements = elements;
 
 	const sheet = wb.addWorksheet('4. Folies');
 	sheet.addRow(['Name', 'Bouwdeel', 'BN', 'Inhoud', 'Eenheid']);

@@ -5,7 +5,7 @@ import { conditions } from './conditions';
 export function createBP(wb: Excel.Workbook, elements: IfcElement[]) {
 	// Aggregate elements by station, code, materiaal, dikte and add up the volume
 	const aggregation = elements.reduce((acc, element) => {
-		const key = `${element.station}-${element.code}-${element.materiaal}-${element.dikte}`;
+		const key = `${element.station}-${element.code}-${element.materiaal}-${element.dikte}-${element.bnr}-${element.bouwdeel}`;
 		if (!acc.has(key)) {
 			acc.set(key, { ...element, volume: element.volume }); // Assuming 'volume' exists and is a number
 		} else {
@@ -16,6 +16,8 @@ export function createBP(wb: Excel.Workbook, elements: IfcElement[]) {
 	}, new Map());
 
 	const BPelements = Array.from(aggregation.values());
+
+	// const BPelements = elements;
 
 	const sheet = wb.addWorksheet('2. Beplating');
 	sheet.addRow(['Name', 'Dikte', 'Bouwdeel', 'BN', 'Inhoud', 'Eenheid']);

@@ -17,7 +17,7 @@
 	const columns = table.createColumns([
 		table.column({
 			accessor: 'name',
-			header: 'Name',
+			header: 'Name'
 		}),
 		table.column({
 			accessor: 'modulenaam',
@@ -34,7 +34,7 @@
 		table.column({
 			accessor: 'materiaal',
 			header: 'Materiaal'
-		}),
+		})
 	]);
 
 	const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates } =
@@ -43,7 +43,7 @@
 	const { hasNextPage, hasPreviousPage, pageIndex } = pluginStates.page;
 </script>
 
-<div class='w-full'>
+<div class="w-full">
 	<div class="rounded-md border">
 		<Table.Root {...$tableAttrs}>
 			<Table.Header>
@@ -68,13 +68,13 @@
 							{#each row.cells as cell (cell.id)}
 								<Subscribe attrs={cell.attrs()} let:attrs>
 									<Table.Cell {...attrs}>
-                    {#if cell.id === 'name'}
-                      <div class='truncate-fixed font-medium'>
-                        <Render of={cell.render()} />
-                      </div>
-                    {:else}
-                      <Render of={cell.render()} />
-                    {/if}
+										{#if cell.id === 'name'}
+											<div class="truncate-fixed font-medium">
+												<Render of={cell.render()} />
+											</div>
+										{:else}
+											<Render of={cell.render()} />
+										{/if}
 									</Table.Cell>
 								</Subscribe>
 							{/each}
@@ -100,11 +100,11 @@
 	</div>
 </div>
 
-<style lang='postcss'>
-  .truncate-fixed {
-    width: 50ch;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+<style lang="postcss">
+	.truncate-fixed {
+		width: 50ch;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
 </style>

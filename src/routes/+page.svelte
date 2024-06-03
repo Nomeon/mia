@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import * as WebIFC from 'web-ifc';
 	import { handleIFC } from '$lib/ifc/ifc-handler';
 	import type { IfcElement } from '$lib/ifc/ifc-types';
 	import { createLVL, createBP, createISO, createFOL, createOLI } from '$lib/createSheets';
@@ -8,11 +8,20 @@
 	import * as Excel from 'exceljs';
 	import DataTable from './data-table.svelte';
 	import { dialog, fs } from '@tauri-apps/api';
+	import { writable } from 'svelte/store';
+	import { onMount } from 'svelte';
 
+	export let IFCcount = writable(0);
 	let IFCamount: number;
-	let IFCcount = 0;
 	let flattenedElements: IfcElement[] = [];
-  let wb: Excel.Workbook;
+	let wb: Excel.Workbook;
+	let ifcAPI: WebIFC.IfcAPI;
+
+	onMount(async () => {
+		ifcAPI = new WebIFC.IfcAPI();
+		await ifcAPI.Init();
+    console.log('IFC API initialized');
+	});
 
 	function createExcel(elements: IfcElement[]) {
 		const workbook = new Excel.Workbook();
@@ -21,7 +30,7 @@
 		createISO(workbook, elements);
 		createFOL(workbook, elements);
 		createOLI(workbook, elements);
-    return workbook;
+		return workbook;
 	}
 
 	async function selectIFCs() {
@@ -32,21 +41,20 @@
 		if (result) {
 			const allElements: IfcElement[] = [];
 			IFCamount = result.length;
-			Promise.all(
-				result.map(async (file) => {
-					const fileContent = await fs.readBinaryFile(file);
-					const elements = await handleIFC(fileContent);
-					allElements.push(...elements);
-					IFCcount++;
-				})
-			).then(() => {
-				flattenedElements = allElements.flat();
-				flattenedElements.forEach((element) => {
-					element.bouwdeel = element.modulenaam.split('-')[1];
-					element.bnr = 'BN' + element.modulenaam.split('-')[2];
-				});
-				wb = createExcel(flattenedElements);
-			});
+			$IFCcount = 0;
+
+			for (const file of result) {
+        console.log('Reading file')
+				let fileContent = await fs.readBinaryFile(file);
+        console.log('meep')
+        const elements = await handleIFC(ifcAPI, fileContent);
+				console.log('done')
+        allElements.push(...elements);
+				$IFCcount++;
+			}
+
+			flattenedElements = allElements.flat();
+			wb = createExcel(flattenedElements);
 		}
 	}
 
@@ -69,20 +77,20 @@
 	<Button on:click={selectIFCs}>Laad IFCs</Button>
 	{#if IFCamount > 0}
 		<div class="flex w-full flex-row items-center gap-4">
-			<p class="whitespace-nowrap">IFC's geladen: {IFCcount}/{IFCamount}</p>
-			<Progress value={(IFCcount / IFCamount) * 100} />
-      <Button disabled={!wb} on:click={() => createDownload(wb)}>Download Excel</Button>
+			<p class="whitespace-nowrap">IFC's geladen: {$IFCcount}/{IFCamount}</p>
+			<Progress value={($IFCcount / IFCamount) * 100} />
+			<Button disabled={!wb} on:click={() => createDownload(wb)}>Download Excel</Button>
 		</div>
 	{/if}
 </div>
 
-<div class="container flex items-center w-full">
+<div class="container flex w-full items-center">
 	{#if flattenedElements.length > 0}
 		<DataTable data={flattenedElements} />
 	{:else}
-		<div class='w-full min-h-96 flex flex-col items-center justify-center'>
-      <p class='font-medium text-lg'>Selecteer IFCs om ze in te laden.</p>
-      <p class=''>Hierna wordt automatisch het Excel-bestand voor de MIA berekening gegenereerd.</p>
-    </div>
+		<div class="flex min-h-96 w-full flex-col items-center justify-center">
+			<p class="text-lg font-medium">Selecteer IFCs om ze in te laden.</p>
+			<p class="">Hierna wordt automatisch het Excel-bestand voor de MIA berekening gegenereerd.</p>
+		</div>
 	{/if}
 </div>

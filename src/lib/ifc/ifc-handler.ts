@@ -1,44 +1,55 @@
 import * as WebIFC from 'web-ifc';
-import { type IfcElement, type IfcPropertySingleValue } from './ifc-types';
+import { type IfcElement, type IfcType, type PropertyMappings } from './ifc-types';
 
-export async function handleIFC(content: Uint8Array) {
-	const ifcAPI = new WebIFC.IfcAPI();
-	await ifcAPI.Init();
+const propertyMappings: { [key: string]: keyof IfcElement } = {
+	Productcode: 'productcode',
+	Modulenaam: 'modulenaam',
+	Station: 'station',
+	Aantal: 'aantal',
+	Materiaal: 'materiaal',
+	Dikte: 'dikte',
+	Gewicht: 'gewicht',
+	Volume: 'volume',
+	'Naa.K.T': 'code'
+};
+
+export async function handleIFC(ifcAPI: WebIFC.IfcAPI, content: Uint8Array) {
 	const modelID = ifcAPI.OpenModel(content);
 	return await getElements(ifcAPI, modelID);
 }
 
 export async function getElements(ifcAPI: WebIFC.IfcAPI, model: number) {
-	const elementIDs = ifcAPI.GetLineIDsWithType(model, WebIFC.IFCMEMBER);
 	const elements: IfcElement[] = [];
+	const allModelTypes: IfcType[] = ifcAPI.GetAllTypesOfModel(model);
 
-	const propertyMappings: { [key: string]: keyof IfcElement } = {
-		Productcode: 'productcode',
-		Modulenaam: 'modulenaam',
-		Station: 'station',
-		Aantal: 'aantal',
-		Materiaal: 'materiaal',
-		Dikte: 'dikte',
-		Gewicht: 'gewicht',
-		Volume: 'volume',
-		'Naa.K.T': 'code'
-	};
+  // Get bouwdeel and bnr
+  const buildingInfoLines = ifcAPI.GetLineIDsWithType(model, WebIFC.IFCBUILDING)
+  const buildingInfo = ifcAPI.GetLine(model, buildingInfoLines.get(0)).Name.value
+  const bouwdeel = buildingInfo.split('-')[0]
+  const bnr = parseInt(buildingInfo.split('-')[1])
 
-	for (let i = 0; i < elementIDs.size(); i++) {
-		const elementID = ifcAPI.GetLine(model, elementIDs.get(i));
-		const element = { name: elementID.Name.value } as IfcElement;
-
-		const propSet = await ifcAPI.properties.getPropertySets(model, elementID.expressID, true);
-		propSet.forEach((property) => {
-			property.HasProperties.forEach((prop: IfcPropertySingleValue) => {
-				const key = prop.Name.value;
-				if (propertyMappings[key]) {
-					element[propertyMappings[key]] = prop.NominalValue.value;
-				}
-			});
-		});
-		elements.push(element);
+	for (const type of allModelTypes) {
+		//! Check if MechanicalFastener is required
+		if (ifcAPI.IsIfcElement(type.typeID) && type.typeName !== 'IfcMechanicalFastener') {
+			const elementIDs = ifcAPI.GetLineIDsWithType(model, type.typeID);
+			for (let i = 0; i < elementIDs.size(); i++) {
+				const elementID = ifcAPI.GetLine(model, elementIDs.get(i));
+				const element: Partial<IfcElement> = { name: elementID.Name.value, bouwdeel, bnr};
+				const propSet = await ifcAPI.properties.getPropertySets(model, elementID.expressID, true);
+				propSet.forEach((property) => {
+					property.HasProperties.forEach((prop) => {
+						const key = prop.Name.value as keyof PropertyMappings;
+						if (propertyMappings[key]) {
+							element[propertyMappings[key] as keyof IfcElement] = prop.NominalValue.value;
+						}
+					});
+				});
+				elements.push(element as IfcElement);
+			}
+		}
 	}
+
+	ifcAPI.CloseModel(model);
 
 	const combinedElements: IfcElement[] = Object.values(
 		elements.reduce(

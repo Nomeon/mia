@@ -5,7 +5,7 @@ import { conditions } from './conditions';
 export function createLVL(wb: Excel.Workbook, elements: IfcElement[]) {
 	// Aggregate elements by station, code, materiaal, dikte and add up the gewicht
 	const aggregation = elements.reduce((acc, element) => {
-		const key = `${element.station}-${element.code}-${element.materiaal}-${element.dikte}`;
+		const key = `${element.name}-${element.station}-${element.code}-${element.materiaal}-${element.dikte}-${element.bnr}-${element.bouwdeel}`;
 		if (!acc.has(key)) {
 			acc.set(key, { ...element, gewicht: element.gewicht }); // Assuming 'gewicht' exists and is a number
 		} else {
@@ -16,6 +16,8 @@ export function createLVL(wb: Excel.Workbook, elements: IfcElement[]) {
 	}, new Map());
 
 	const LVLelements = Array.from(aggregation.values());
+
+	// const LVLelements = elements;
 
 	const sheet = wb.addWorksheet('1. LVL');
 	sheet.addRow(['Name', 'Dikte', 'Bouwdeel', 'BN', 'Inhoud', 'Eenheid']);
