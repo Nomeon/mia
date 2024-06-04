@@ -29,3 +29,12 @@ export type IfcType = {
 	typeID: number;
 	typeName: string;
 };
+
+export type Conditions = {
+  station: string;
+  code: string;
+  materiaal?: string;
+  dikte?: number;
+  type: string;
+  name: string;
+}[];
