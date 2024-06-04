@@ -44,11 +44,8 @@
 			$IFCcount = 0;
 
 			for (const file of result) {
-        console.log('Reading file')
 				let fileContent = await fs.readBinaryFile(file);
-        console.log('meep')
         const elements = await handleIFC(ifcAPI, fileContent);
-				console.log('done')
         allElements.push(...elements);
 				$IFCcount++;
 			}

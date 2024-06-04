@@ -119,7 +119,7 @@ export function createBP(wb: Excel.Workbook, elements: IfcElement[]) {
 				element.code === condition.code &&
 				element.materiaal === condition.materiaal &&
 				element.dikte === condition.dikte &&
-				condition.type === 'Promatect100'
+				condition.type === 'Promatect 100'
 		).forEach((filteredElement) => {
 			sheet.addRow([
 				condition.name,

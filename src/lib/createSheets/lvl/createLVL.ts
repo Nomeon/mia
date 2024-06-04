@@ -1,160 +1,184 @@
 import Excel from 'exceljs';
 import type { IfcElement } from '$lib/ifc/ifc-types';
 import { conditions } from './conditions';
+import { aggregate } from '$lib/ifc/aggregate';
 
 export function createLVL(wb: Excel.Workbook, elements: IfcElement[]) {
-	// Aggregate elements by station, code, materiaal, dikte and add up the gewicht
-	const aggregation = elements.reduce((acc, element) => {
-		const key = `${element.name}-${element.station}-${element.code}-${element.materiaal}-${element.dikte}-${element.bnr}-${element.bouwdeel}`;
-		if (!acc.has(key)) {
-			acc.set(key, { ...element, gewicht: element.gewicht }); // Assuming 'gewicht' exists and is a number
-		} else {
-			acc.get(key).gewicht += element.gewicht;
-			acc.get(key).aantal += element.aantal;
-		}
-		return acc;
-	}, new Map());
-
-	const LVLelements = Array.from(aggregation.values());
-
-	// const LVLelements = elements;
-
 	const sheet = wb.addWorksheet('1. LVL');
 	sheet.addRow(['Name', 'Dikte', 'Bouwdeel', 'BN', 'Inhoud', 'Eenheid']);
 
 	// LVL VLoer
 	sheet.addRow(['LVL vloer']).font = { bold: true };
-	conditions.forEach((condition) => {
-		LVLelements.filter(
-			(element) =>
-				element.station === condition.station &&
-				element.code === condition.code &&
-				element.materiaal === condition.materiaal &&
-				element.dikte === condition.dikte &&
-				condition.type === 'LVLvloer'
-		).forEach((filteredElement) => {
-			sheet.addRow([
-				filteredElement.materiaal,
-				filteredElement.dikte,
-				filteredElement.bouwdeel,
-				filteredElement.bnr,
-				filteredElement.gewicht,
-				'kg'
-			]);
-		});
-	});
+  const LVLvloerElements = [];
+  for (const condition of conditions) {
+    if (condition.type === 'LVLvloer') {
+      for (const element of elements) {
+        if (
+          element.station === condition.station &&
+          element.code === condition.code &&
+          element.materiaal === condition.materiaal &&
+          element.dikte === condition.dikte
+        ) {
+          LVLvloerElements.push(element);
+        }
+      }
+    }
+  }
+  aggregate(LVLvloerElements).forEach((filteredElement) => {
+    sheet.addRow([
+      filteredElement.materiaal,
+      filteredElement.dikte,
+      filteredElement.bouwdeel,
+      filteredElement.bnr,
+      filteredElement.gewicht,
+      'kg'
+    ]);
+  });
 
 	// LVL Plafond
 	sheet.addRow(['LVL plafond']).font = { bold: true };
-	conditions.forEach((condition) => {
-		LVLelements.filter(
-			(element) =>
-				element.station === condition.station &&
-				element.code === condition.code &&
-				element.materiaal === condition.materiaal &&
-				element.dikte === condition.dikte &&
-				condition.type === 'LVLplafond'
-		).forEach((filteredElement) => {
-			sheet.addRow([
-				filteredElement.materiaal,
-				filteredElement.dikte,
-				filteredElement.bouwdeel,
-				filteredElement.bnr,
-				filteredElement.gewicht,
-				'kg'
-			]);
-		});
-	});
+  const LVLplafondElements = [];
+  for (const condition of conditions) {
+    if (condition.type === 'LVLplafond') {
+      for (const element of elements) {
+        if (
+          element.station === condition.station &&
+          element.code === condition.code &&
+          element.materiaal === condition.materiaal &&
+          element.dikte === condition.dikte
+        ) {
+          LVLplafondElements.push(element);
+        }
+      }
+    }
+  }
+  aggregate(LVLplafondElements).forEach((filteredElement) => {
+    sheet.addRow([
+      filteredElement.materiaal,
+      filteredElement.dikte,
+      filteredElement.bouwdeel,
+      filteredElement.bnr,
+      filteredElement.gewicht,
+      'kg'
+    ]);
+  });  
 
 	// LVL Gevel
 	sheet.addRow(['LVL gevel']).font = { bold: true };
-	conditions.forEach((condition) => {
-		LVLelements.filter(
-			(element) =>
-				element.station === condition.station &&
-				element.code === condition.code &&
-				element.materiaal === condition.materiaal &&
-				element.dikte === condition.dikte &&
-				condition.type === 'LVLgevel'
-		).forEach((filteredElement) => {
-			sheet.addRow([
-				filteredElement.materiaal,
-				filteredElement.dikte,
-				filteredElement.bouwdeel,
-				filteredElement.bnr,
-				filteredElement.gewicht,
-				'kg'
-			]);
-		});
-	});
+	const LVLgevelElements = [];
+  for (const condition of conditions) {
+    if (condition.type === 'LVLgevel') {
+      for (const element of elements) {
+        if (
+          element.station === condition.station &&
+          element.code === condition.code &&
+          element.materiaal === condition.materiaal &&
+          element.dikte === condition.dikte
+        ) {
+          LVLgevelElements.push(element);
+        }
+      }
+    }
+  }
+  aggregate(LVLgevelElements).forEach((filteredElement) => {
+    sheet.addRow([
+      filteredElement.materiaal,
+      filteredElement.dikte,
+      filteredElement.bouwdeel,
+      filteredElement.bnr,
+      filteredElement.gewicht,
+      'kg'
+    ]);
+  });
 
 	// LVL Woningscheidende wand
 	sheet.addRow(['LVL woningscheidende wand']).font = { bold: true };
-	conditions.forEach((condition) => {
-		LVLelements.filter(
-			(element) =>
-				element.station === condition.station &&
-				element.code === condition.code &&
-				element.materiaal === condition.materiaal &&
-				element.dikte === condition.dikte &&
-				condition.type === 'LVLwsw' &&
-				element.name.includes('WSW')
-		).forEach((filteredElement) => {
-			sheet.addRow([
-				filteredElement.materiaal,
-				filteredElement.dikte,
-				filteredElement.bouwdeel,
-				filteredElement.bnr,
-				filteredElement.gewicht,
-				'kg'
-			]);
-		});
-	});
+	const LVLwswElements = [];
+  for (const condition of conditions) {
+    if (condition.type === 'LVLwsw') {
+      for (const element of elements) {
+        if (
+          element.station === condition.station &&
+          element.code === condition.code &&
+          element.materiaal === condition.materiaal &&
+          element.dikte === condition.dikte &&
+          element.name.includes('WSW')
+        ) {
+          LVLwswElements.push(element);
+        }
+      }
+    }
+  }
+
+  aggregate(LVLwswElements).forEach((filteredElement) => {
+    sheet.addRow([
+      filteredElement.materiaal,
+      filteredElement.dikte,
+      filteredElement.bouwdeel,
+      filteredElement.bnr,
+      filteredElement.gewicht,
+      'kg'
+    ]);
+  });
 
 	// LVL Binnenwand
 	sheet.addRow(['LVL binnenwand']).font = { bold: true };
-	conditions.forEach((condition) => {
-		LVLelements.filter(
-			(element) =>
-				element.station === condition.station &&
-				element.code === condition.code &&
-				element.materiaal === condition.materiaal &&
-				element.dikte === condition.dikte &&
-				condition.type === 'LVLbw' &&
-				!element.name.includes('WSW')
-		).forEach((filteredElement) => {
-			sheet.addRow([
-				filteredElement.materiaal,
-				filteredElement.dikte,
-				filteredElement.bouwdeel,
-				filteredElement.bnr,
-				filteredElement.gewicht,
-				'kg'
-			]);
-		});
-	});
+	const LVLbwElements = [];
+  for (const condition of conditions) {
+    if (condition.type === 'LVLbw') {
+      for (const element of elements) {
+        if (
+          element.station === condition.station &&
+          element.code === condition.code &&
+          element.materiaal === condition.materiaal &&
+          element.dikte === condition.dikte &&
+          !element.name.includes('WSW')
+        ) {
+          LVLbwElements.push(element);
+        }
+      }
+    }
+  }
+
+  aggregate(LVLbwElements).forEach((filteredElement) => {
+    sheet.addRow([
+      filteredElement.materiaal,
+      filteredElement.dikte,
+      filteredElement.bouwdeel,
+      filteredElement.bnr,
+      filteredElement.gewicht,
+      'kg'
+    ]);
+  });
 
 	// Kolommen
 	sheet.addRow(['Kolommen']).font = { bold: true };
-	conditions.forEach((condition) => {
-		LVLelements.filter(
-			(element) =>
-				element.station === condition.station &&
-				element.code === condition.code &&
-				element.materiaal === condition.materiaal &&
-				element.dikte === condition.dikte &&
-				condition.type === 'LVLkolom'
-		).forEach((filteredElement) => {
-			sheet.addRow([
-				filteredElement.materiaal,
-				filteredElement.dikte,
-				filteredElement.bouwdeel,
-				filteredElement.bnr,
-				filteredElement.gewicht,
-				'kg'
-			]);
-		});
-	});
+	const LVLkolomElements = [];
+  for (const condition of conditions) {
+    if (condition.type === 'LVLkolom') {
+      for (const element of elements) {
+        if (
+          element.station === condition.station &&
+          element.code === condition.code &&
+          element.materiaal === condition.materiaal &&
+          element.dikte === condition.dikte
+        ) {
+          LVLkolomElements.push(element);
+        }
+      }
+    }
+  }
 
+  aggregate(LVLkolomElements).forEach((filteredElement) => {
+    sheet.addRow([
+      filteredElement.materiaal,
+      filteredElement.dikte,
+      filteredElement.bouwdeel,
+      filteredElement.bnr,
+      filteredElement.gewicht,
+      'kg'
+    ]);
+  });
+  
 	return wb;
 }
