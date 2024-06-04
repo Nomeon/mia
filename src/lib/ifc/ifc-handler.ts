@@ -37,7 +37,7 @@ export async function getElements(ifcAPI: WebIFC.IfcAPI, model: number) {
 				const element: Partial<IfcElement> = { name: elementID.Name.value, bouwdeel, bnr};
 				const propSet = await ifcAPI.properties.getPropertySets(model, elementID.expressID, true);
 				propSet.forEach((property) => {
-					property.HasProperties.forEach((prop) => {
+					property.HasProperties.forEach((prop: { Name: { value: string; }; NominalValue: { value: undefined; }; }) => {
 						const key = prop.Name.value as keyof PropertyMappings;
 						if (propertyMappings[key]) {
 							element[propertyMappings[key] as keyof IfcElement] = prop.NominalValue.value;

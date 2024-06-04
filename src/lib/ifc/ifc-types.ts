@@ -35,6 +35,7 @@ export type Conditions = {
   code: string;
   materiaal?: string;
   dikte?: number;
-  type: string;
+  type?: string;
   name: string;
+	filter?: string;
 }[];

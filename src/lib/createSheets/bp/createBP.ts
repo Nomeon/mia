@@ -13,6 +13,7 @@ export function createBP(wb: Excel.Workbook, elements: IfcElement[]) {
   processElements(conditions, elements, 'Windstopper', 'Windstopper', sheet);
   sheet.addRow(['Spaanplaat']).font = { bold: true };
   processElements(conditions, elements, 'Spaanplaat', 'SPANO plafond en dak', sheet);
+  processElements(conditions, elements, 'Spaanplaat', 'SPANO dak', sheet);
   processElements(conditions, elements, 'Spaanplaat', 'SPANO gevels', sheet);
   processElements(conditions, elements, 'Spaanplaat', 'SPANO binnenwand', sheet);
   sheet.addRow(['MDF']).font = { bold: true };
