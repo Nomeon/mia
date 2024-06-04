@@ -21,8 +21,8 @@ export type IfcElement = {
 	gewicht: number;
 	volume: number;
 	code: string;
-	bnr: number | null;
-	bouwdeel: string | null;
+	bnr?: number;
+	bouwdeel?: string;
 };
 
 export type IfcType = {
