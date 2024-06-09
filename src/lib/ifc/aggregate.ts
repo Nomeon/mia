@@ -7,6 +7,7 @@ export function aggregate(elements: IfcElement[]) {
       acc.set(key, { ...element, volume: element.volume, gewicht: element.gewicht });
     } else {
       acc.get(key).volume += element.volume;
+      acc.get(key).oppervlakte += element.oppervlakte;
       acc.get(key).gewicht += element.gewicht;
       acc.get(key).aantal += element.aantal;
     }

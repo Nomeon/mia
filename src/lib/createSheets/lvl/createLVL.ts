@@ -5,7 +5,7 @@ import { aggregate } from '$lib/ifc/aggregate';
 
 export function createLVL(wb: Excel.Workbook, elements: IfcElement[]) {
 	const sheet = wb.addWorksheet('1. LVL');
-	sheet.addRow(['Name', 'Dikte', 'Bouwdeel', 'BN', 'Inhoud', 'Eenheid']);
+	sheet.addRow(['Name', 'Dikte', 'Bouwdeel', 'BN', 'Inhoud', 'Eenheid', 'Gewicht', 'Eenheid']);
 
 	// LVL VLoer
 	sheet.addRow(['LVL vloer']).font = { bold: true };
@@ -30,6 +30,8 @@ export function createLVL(wb: Excel.Workbook, elements: IfcElement[]) {
       filteredElement.dikte,
       filteredElement.bouwdeel,
       filteredElement.bnr,
+      filteredElement.volume,
+      'm3',
       filteredElement.gewicht,
       'kg'
     ]);
@@ -58,6 +60,8 @@ export function createLVL(wb: Excel.Workbook, elements: IfcElement[]) {
       filteredElement.dikte,
       filteredElement.bouwdeel,
       filteredElement.bnr,
+      filteredElement.volume,
+      'm3',
       filteredElement.gewicht,
       'kg'
     ]);
@@ -86,6 +90,8 @@ export function createLVL(wb: Excel.Workbook, elements: IfcElement[]) {
       filteredElement.dikte,
       filteredElement.bouwdeel,
       filteredElement.bnr,
+      filteredElement.volume,
+      'm3',
       filteredElement.gewicht,
       'kg'
     ]);
@@ -116,6 +122,8 @@ export function createLVL(wb: Excel.Workbook, elements: IfcElement[]) {
       filteredElement.dikte,
       filteredElement.bouwdeel,
       filteredElement.bnr,
+      filteredElement.volume,
+      'm3',
       filteredElement.gewicht,
       'kg'
     ]);
@@ -146,6 +154,8 @@ export function createLVL(wb: Excel.Workbook, elements: IfcElement[]) {
       filteredElement.dikte,
       filteredElement.bouwdeel,
       filteredElement.bnr,
+      filteredElement.volume,
+      'm3',
       filteredElement.gewicht,
       'kg'
     ]);
@@ -175,6 +185,8 @@ export function createLVL(wb: Excel.Workbook, elements: IfcElement[]) {
       filteredElement.dikte,
       filteredElement.bouwdeel,
       filteredElement.bnr,
+      filteredElement.volume,
+      'm3',
       filteredElement.gewicht,
       'kg'
     ]);

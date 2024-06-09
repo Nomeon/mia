@@ -17,10 +17,13 @@ export type IfcElement = {
 	station: string;
 	aantal: number;
 	materiaal: string;
+  lengte: number;
+  breedte: number;
 	dikte: number;
 	gewicht: number;
 	volume: number;
 	code: string;
+  oppervlakte: number;
 	bnr?: number;
 	bouwdeel?: string;
 };

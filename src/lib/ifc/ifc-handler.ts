@@ -7,6 +7,8 @@ const propertyMappings: { [key: string]: keyof IfcElement } = {
 	Station: 'station',
 	Aantal: 'aantal',
 	Materiaal: 'materiaal',
+  Lengte: 'lengte',
+  Breedte: 'breedte',
 	Dikte: 'dikte',
 	Gewicht: 'gewicht',
 	Volume: 'volume',
@@ -51,6 +53,11 @@ export async function getElements(ifcAPI: WebIFC.IfcAPI, model: number) {
 
 	ifcAPI.CloseModel(model);
 
+  // Create oppervlakte from lengte and breedte, divide by 1000000 to convert to m2
+  elements.forEach((element) => {
+    element.oppervlakte = ((element.lengte / 1000) * (element.breedte / 1000)) // Lengte and breedte are in mm
+  })
+
 	const combinedElements: IfcElement[] = Object.values(
 		elements.reduce(
 			(acc, element) => {
@@ -59,6 +66,7 @@ export async function getElements(ifcAPI: WebIFC.IfcAPI, model: number) {
 					acc[key] = { ...element };
 				} else {
 					acc[key].aantal += element.aantal;
+          acc[key].oppervlakte += element.oppervlakte;
 					acc[key].volume += element.volume;
 					acc[key].gewicht += element.gewicht;
 				}

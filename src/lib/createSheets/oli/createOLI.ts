@@ -30,7 +30,7 @@ function processElements(conditions: Conditions, elements: IfcElement[], name: s
           filteredElement.bouwdeel,
           filteredElement.bnr,
           filteredElement.volume,
-          'm2',
+          'm3',
 					filteredElement.gewicht,
 					'kg'
       ]);

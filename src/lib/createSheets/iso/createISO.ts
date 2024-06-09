@@ -39,7 +39,7 @@ function processElements(conditions: Conditions, elements: IfcElement[], type: s
           filteredElement.dikte,
           filteredElement.bouwdeel,
           filteredElement.bnr,
-          filteredElement.volume,
+          filteredElement.oppervlakte,
           'm2'
       ]);
   });
