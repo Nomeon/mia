@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "MIAtool",
-    "version": "0.0.1"
+    "version": "0.0.2"
   },
   "tauri": {
     "allowlist": {
@@ -68,7 +68,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": false,
-        "title": "MIAtool 0.0.1",
+        "title": "MIAtool 0.0.2",
         "width": 1000
       }
     ]
