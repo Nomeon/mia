@@ -5,7 +5,7 @@ import { aggregate } from '$lib/ifc/aggregate';
 
 export function createISO(wb: Excel.Workbook, elements: IfcElement[]) {
   const sheet = wb.addWorksheet('3. Isolatie');
-  sheet.addRow([' ', 'Name', 'Bouwdeel', 'BN', 'Inhoud', 'Eenheid']);
+  sheet.addRow([' ', 'Name', 'Dikte', 'Bouwdeel', 'BN', 'Inhoud', 'Eenheid']);
 
   sheet.addRow(['Glaswol isolatie']).font = { bold: true };
   processElements(conditions, elements, 'Glaswol', 'Isolatie vloeren', sheet);
@@ -36,6 +36,7 @@ function processElements(conditions: Conditions, elements: IfcElement[], type: s
   aggregatedElements.forEach(filteredElement => {
       sheet.addRow([
           name,
+          filteredElement.name,
           filteredElement.dikte,
           filteredElement.bouwdeel,
           filteredElement.bnr,
